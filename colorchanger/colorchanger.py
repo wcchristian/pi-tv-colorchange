@@ -4,6 +4,7 @@ import config
 from phue import Bridge
 from rgbxy import Converter
 from rgbxy import GamutC
+import os
 
 converter = Converter(GamutC)
 hue_bridge = Bridge(config.bridge_ip_address)
@@ -21,7 +22,9 @@ def change_color_based_on_image(img):
         draw_debug_image(img, (min_x, min_y), (max_x, max_y))
 
     sample_img = img[min_y:max_y, min_x:max_x]
-    dominant_color = find_dominant_color(sample_img)
+    cv2.imwrite('tmp.jpg', sample_img)
+    dominant_color = find_dominant_color('tmp.jpg')
+    os.remove('tmp.jpg')
     set_hue_color(config.hue_light_id, dominant_color)
 
 
@@ -41,12 +44,18 @@ def get_sample_zone_coordinates(h, w):
     max_y = int(min_y + tp_height)
     max_x = int(min_x + tp_width)
 
+    min_x += config.image_sample_padding[0]
+    max_x += config.image_sample_padding[0]
+
+    min_y += config.image_sample_padding[1]
+    max_y += config.image_sample_padding[1]
+
     return min_x, min_y, max_x, max_y
 
 
-def find_dominant_color(sample_image):
-    color_theif = ColorThief(sample_image)
-    dominant_color = color_theif.get_color(quality=config.image_color_detect_quality_gate)
+def find_dominant_color(file_name):
+    color_thief = ColorThief(file_name)
+    dominant_color = color_thief.get_color(quality=config.image_color_detect_quality_gate)
     return dominant_color
 
 
