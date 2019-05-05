@@ -1,10 +1,4 @@
-Pillow
-scipy
-numpy
-matplotlib
 colorthief
-beautifulhue
 phue
 rgbxy
-pyautogui
 opencv-python
