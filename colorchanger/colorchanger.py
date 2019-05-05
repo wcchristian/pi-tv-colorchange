@@ -2,9 +2,10 @@ from colorthief import ColorThief
 import cv2
 import os
 
+
 def change_color(filename, b, converter):
     img = cv2.imread(filename)
-    img2 = cv2.resize(img, (1000, 1000))
+    img2 = cv2.resize(img, (100, 100))
     h, w, c = img2.shape
 
     tp_height = h*0.1
