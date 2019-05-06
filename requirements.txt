@@ -2,3 +2,4 @@ colorthief
 phue
 rgbxy
 opencv-python
+blynk-library-python

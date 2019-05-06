@@ -5,6 +5,7 @@ from phue import Bridge
 from rgbxy import Converter
 from rgbxy import GamutC
 import os
+import sys
 
 converter = Converter(GamutC)
 hue_bridge = Bridge(config.bridge_ip_address)
@@ -22,16 +23,24 @@ def change_color_based_on_image(img):
         draw_debug_image(img, (min_x, min_y), (max_x, max_y))
 
     sample_img = img[min_y:max_y, min_x:max_x]
-    cv2.imwrite('tmp.jpg', sample_img)
-    dominant_color = find_dominant_color('tmp.jpg')
-    os.remove('tmp.jpg')
+    cv2.imwrite(config.tmp_image_name, sample_img)
+    dominant_color = find_dominant_color(config.tmp_image_name)
+    os.remove(config.tmp_image_name)
     set_hue_color(config.hue_light_id, dominant_color)
 
 
 def draw_debug_image(image, rect_start, rect_end):
-    img2 = cv2.rectangle(image, rect_start, rect_end, config.debug_box_color, config.debug_box_size)
-    cv2.imshow(config.debug_window_name, img2)
-    cv2.waitKey(1)
+    debug_image = cv2.rectangle(image, rect_start, rect_end, config.debug_box_color, config.debug_box_size)
+    if config.debug_gui:
+        cv2.imshow(config.debug_window_name, debug_image)
+        cv2.waitKey(1)
+    else:
+        try:
+            os.remove(config.debug_static_img_name)
+        except FileNotFoundError:
+            print('First time calibration run, file doesn\'t exist.. Creating now...')
+        cv2.imwrite(config.debug_static_img_name, debug_image)
+        sys.exit()
 
 
 def get_sample_zone_coordinates(h, w):
