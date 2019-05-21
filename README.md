@@ -45,7 +45,7 @@ network={
 1. Run the program in config mode (Debug = True, Blink_on = False)
 1. Make sure that the image lines up with the display you will be sampling
 1. Turn (Debug = False, Blink_on = False)
-
+d
 ### Setup Blynk
 1. Download Blynk from the app store
 1. Create a new project and copy the key into config.py

@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  colorchange:
+    build: .
+    container_name: colorchange
+
+  motioneye:
+    image: ccrisan/motioneye:master-amd64
+    container_name: motioneye
+    ports: 
+      - 8765:8765
+    hostname: motioneye
+    restart: always

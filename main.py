@@ -1,63 +1,65 @@
+from colorthief import ColorThief
+from phue import Bridge
+from rgbxy import Converter
+from rgbxy import GamutC
 from colorchanger import colorchanger
 import cv2
+import os
 import time
-import config
-import BlynkLib
-from threading import Thread
 
-blynk = BlynkLib.Blynk(config.blynk_key)
-running = False
+converter = Converter(GamutC)
+b = Bridge('192.168.1.3')
+# b.connect()
 
+def images():
+    for i in range(0, 58):
+        start = time.time()
+        print('Starting pass', i)
+
+        colorchanger.change_color('video/frame'+str(i)+'.jpg', b, converter)
+        time.sleep(1)
+
+        end = time.time()
+        print('This pass took', end - start)
+
+def video():
+        # Path to video file 
+    vidObj = cv2.VideoCapture('images/video.mov') 
+  
+    # Used as counter variable 
+    count = 0
+    imgCount = 0
+  
+    # checks whether frames were extracted 
+    success = 1
+  
+    while success: 
+
+        success, image = vidObj.read() 
+        if count % 100 == 0:
+            cv2.imwrite("video/frame%d.jpg" % imgCount, image) 
+            imgCount += 1
+  
+        count += 1
 
 def capture_image_over_time():
+    # initialize the camera
     while True:
-        time.sleep(config.sample_time)
+        # time.sleep(1)
         cam = cv2.VideoCapture(0)
         ret, image = cam.read()
 
         if ret:
-            start = time.time()
-            colorchanger.change_color_based_on_image(image)
-            end = time.time()
-            if config.debug_logging:
-                print('This pass took', end - start)
-        else:
-            if config.debug_logging:
-                print('Image failed to capture...')
-
+            cv2.imwrite('fooo2.jpg',image)
         cam.release()
 
-        if not running:
-            break
+        start = time.time()
 
+        colorchanger.change_color('fooo2.jpg', b, converter)
 
-current_thread = Thread(target=capture_image_over_time)
+        os.remove("fooo2.jpg")
+        os.rem
+        end = time.time()
+        print('This pass took', end - start)
 
-
-# Register Virtual Pins
-@blynk.VIRTUAL_WRITE(1)
-def my_write_handler(value):
-    global running
-    global current_thread
-
-    if current_thread is None:
-        current_thread = Thread(target=capture_image_over_time)
-
-    if int(value[0]) == 0:
-        print('Turning Off')
-        running = False
-        current_thread = None
-    else:
-        print('Turning On')
-        running = True
-        current_thread.start()
-
-
-if config.blynk_on:
-    print('Starting Blynk Run...')
-    while True:
-        blynk.run()
-else:
-    print('Starting program without Blynk...')
-    running = True
-    capture_image_over_time()
+capture_image_over_time()

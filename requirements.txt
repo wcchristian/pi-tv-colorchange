@@ -1,5 +1,5 @@
 colorthief
 phue
 rgbxy
-opencv-python
+opencv-python==4.1.0.25
 blynk-library-python
