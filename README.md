@@ -66,5 +66,9 @@ to your liking
 
 
 ## Development
+### Using Docker
+```
+docker run --rm -it --name pi-tv-colorchange $(docker build -q .)
+```
 
 ## Attribution

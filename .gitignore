@@ -1,5 +1,5 @@
 .python-version
-venv
+_venv
 .DS_Store
 .idea
 .vscode

@@ -62,4 +62,5 @@ def capture_image_over_time():
         end = time.time()
         print('This pass took', end - start)
 
-capture_image_over_time()
+# capture_image_over_time()
+print("yoyoyooyoyo")
